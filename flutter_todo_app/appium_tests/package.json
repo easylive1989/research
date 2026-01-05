@@ -1,0 +1,22 @@
+{
+  "name": "flutter-todo-appium-tests",
+  "version": "1.0.0",
+  "description": "Appium E2E tests for Flutter Todo App",
+  "main": "todo_test.js",
+  "scripts": {
+    "test": "node todo_test.js"
+  },
+  "keywords": [
+    "appium",
+    "flutter",
+    "e2e",
+    "testing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "appium": "^2.5.0",
+    "appium-flutter-driver": "^2.8.0",
+    "webdriverio": "^8.32.0"
+  }
+}
