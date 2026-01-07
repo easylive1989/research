@@ -1,0 +1,38 @@
+name: Flutter Integration Test
+
+on:
+  push:
+    branches: [ "main", "master", "research-flutter-e2e" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Web
+        run: flutter config --enable-web
+
+      - name: Recreate Platform Files
+        working-directory: 2026-01-06-flutter-e2e-research/todo_app
+        run: flutter create . --platforms web
+
+      - name: Install Dependencies
+        working-directory: 2026-01-06-flutter-e2e-research/todo_app
+        run: flutter pub get
+
+      - name: Run Integration Test (Web)
+        working-directory: 2026-01-06-flutter-e2e-research/todo_app
+        run: |
+          # Start a virtual framebuffer for Chrome
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+          export DISPLAY=:99
+          flutter test integration_test/app_test.dart -d chrome

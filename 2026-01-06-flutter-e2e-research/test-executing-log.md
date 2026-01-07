@@ -34,3 +34,9 @@ The integration test could not be successfully executed in this environment due 
 2.  Linux desktop build toolchain instability (Clang segfault).
 
 However, the capability to *write* the app and the test code was verified.
+
+## CI/CD Verification
+A GitHub Actions workflow (`.github/workflows/flutter_integration_test.yml`) has been added to verify the integration tests in a standard CI environment where Chrome and Linux build tools are fully supported. This workflow will:
+1.  Install Flutter.
+2.  Recreate the platform-specific files (to ensure a clean state and avoid repository size limits).
+3.  Run the integration tests using `flutter test integration_test/app_test.dart -d chrome` inside `xvfb`.
