@@ -39,4 +39,7 @@ However, the capability to *write* the app and the test code was verified.
 A GitHub Actions workflow (`.github/workflows/flutter_integration_test.yml`) has been added to verify the integration tests in a standard CI environment where Chrome and Linux build tools are fully supported. This workflow will:
 1.  Install Flutter.
 2.  Recreate the platform-specific files (to ensure a clean state and avoid repository size limits).
-3.  Run the integration tests using `flutter test integration_test/app_test.dart -d chrome` inside `xvfb`.
+3.  Launch `chromedriver` on port 4444.
+4.  Run the integration tests using `flutter drive` inside `xvfb`.
+    *   Command: `flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d chrome`
+    *   Note: `flutter test` is not yet supported for web integration tests, so `flutter drive` is used.
