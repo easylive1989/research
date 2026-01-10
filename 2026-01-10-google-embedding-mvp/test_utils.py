@@ -43,5 +43,32 @@ class TestUtils(unittest.TestCase):
         # Assert
         self.assertIn("PDF Page Content", text)
 
+    @patch('utils.chromadb')
+    def test_chroma_integration(self, mock_chromadb):
+        # Setup mock
+        mock_client = MagicMock()
+        mock_collection = MagicMock()
+        mock_chromadb.PersistentClient.return_value = mock_client
+        mock_client.get_or_create_collection.return_value = mock_collection
+
+        # Test initialization
+        collection = utils.get_chroma_collection()
+        mock_chromadb.PersistentClient.assert_called()
+        mock_client.get_or_create_collection.assert_called_with(name="embeddings_store")
+
+        # Test save
+        text = "sample text"
+        embedding = [0.1, 0.2]
+        metadata = {"source": "test.txt"}
+
+        doc_id = utils.save_to_chroma(collection, text, embedding, metadata)
+
+        mock_collection.add.assert_called()
+        # Verify call arguments
+        args = mock_collection.add.call_args
+        self.assertEqual(args.kwargs['documents'], [text])
+        self.assertEqual(args.kwargs['embeddings'], [embedding])
+        self.assertEqual(args.kwargs['metadatas'], [metadata])
+
 if __name__ == '__main__':
     unittest.main()

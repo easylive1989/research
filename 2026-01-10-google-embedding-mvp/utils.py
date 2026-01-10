@@ -1,7 +1,9 @@
 import google.generativeai as genai
 from pypdf import PdfReader
 from PIL import Image
-import io
+import chromadb
+import uuid
+import os
 
 def extract_text_from_pdf(file_stream):
     """
@@ -50,3 +52,30 @@ def get_embedding(text, api_key, model_name='models/text-embedding-004'):
         return result['embedding']
     except Exception as e:
         raise Exception(f"Error generating embedding: {e}")
+
+def get_chroma_collection(path="./chroma_db", collection_name="embeddings_store"):
+    """
+    Initializes and returns a ChromaDB collection.
+    """
+    try:
+        client = chromadb.PersistentClient(path=path)
+        collection = client.get_or_create_collection(name=collection_name)
+        return collection
+    except Exception as e:
+        raise Exception(f"Error initializing ChromaDB: {e}")
+
+def save_to_chroma(collection, text, embedding, metadata=None):
+    """
+    Saves text, embedding, and metadata to ChromaDB.
+    """
+    try:
+        doc_id = str(uuid.uuid4())
+        collection.add(
+            documents=[text],
+            embeddings=[embedding],
+            metadatas=[metadata] if metadata else None,
+            ids=[doc_id]
+        )
+        return doc_id
+    except Exception as e:
+        raise Exception(f"Error saving to ChromaDB: {e}")

@@ -1,6 +1,6 @@
 # Google Embedding MVP
 
-這是一個使用 Google Generative AI (Gemini) API 進行文字嵌入 (Embedding) 的最小可行性產品 (MVP)。此版本包含一個 Streamlit 網頁應用程式，支援上傳文件與圖片。
+這是一個使用 Google Generative AI (Gemini) API 進行文字嵌入 (Embedding) 的最小可行性產品 (MVP)。此版本包含一個 Streamlit 網頁應用程式，支援上傳文件與圖片，並整合 ChromaDB 進行向量儲存。
 
 ## 功能
 
@@ -10,6 +10,10 @@
     - **PDF (.pdf)**：自動擷取文字內容並嵌入。
     - **圖片 (.jpg, .png)**：使用 Gemini 1.5 Flash 模型生成圖片描述，再將描述轉換為嵌入向量 (Embedding)。
 - **嵌入模型**：預設使用 `text-embedding-004`。
+- **向量資料庫 (ChromaDB)**：
+    - 自動建立本地資料庫 `chroma_db`。
+    - 支援將生成的嵌入向量與原始文字儲存至資料庫。
+    - 可在介面上檢視已儲存的文檔。
 
 ## 安裝
 
@@ -47,11 +51,12 @@ streamlit run app.py
 ## 專案結構
 
 - `app.py`: Streamlit 主程式。
-- `utils.py`: 處理檔案讀取、圖片描述生成與嵌入的邏輯。
+- `utils.py`: 處理檔案讀取、圖片描述生成、嵌入生成及 ChromaDB 操作的邏輯。
 - `requirements.txt`: 專案依賴套件列表。
 - `test_utils.py`: 用於測試 `utils.py` 邏輯的單元測試。
+- `chroma_db/`: 自動生成的本地向量資料庫目錄。
 
 ## 注意事項
 
 - 本專案使用 `google-generativeai` 函式庫。
-- 圖片嵌入是透過「圖片 -> 文字描述 -> 嵌入」的方式間接實現的，因為標準 Text Embedding 模型不直接支援圖片輸入。
+- 圖片嵌入是透過「圖片 -> 文字描述 -> 嵌入」的方式間接實現的。
